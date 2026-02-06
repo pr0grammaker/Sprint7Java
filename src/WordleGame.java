@@ -68,7 +68,7 @@ public class WordleGame {
         String hint = giveHint(answer);
         previousWords.add(answer);
         previousHints.add(hint);
-        updateHintKnowledge(answer,hint);
+        updateHintKnowledge(answer, hint);
 
         return hint;
     }
@@ -77,7 +77,7 @@ public class WordleGame {
         if (COUNT_STEPS < 0) {
             throw new GameLogicException("Попытки ушли в минус!");
         }
-        return COUNT_STEPS == 0;
+        return COUNT_STEPS <= 0;
     }
 
     public boolean correctAnswer(String answer) {
@@ -89,22 +89,49 @@ public class WordleGame {
             throw new WordleException("Слово для подсказки должно быть длиной " + correctAnswer.length());
         }
 
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder("-----");
         answer = answer.toLowerCase().replace('ё', 'е');
 
-        for (int i = 0; i < correctAnswer.length(); i++) {
-            char a = answer.charAt(i);
-            char c = correctAnswer.charAt(i);
+        String realAnswer = correctAnswer;
 
-            if (a == c) {
-                result.append("+");
-            } else if (correctAnswer.contains(String.valueOf(a))) {
-                result.append("^");
-            } else {
-                result.append("-");
+        boolean[] usedInAnswer = new boolean[5];
+
+        // +
+        for (int i = 0; i < 5; i++) {
+            if (answer.charAt(i) == realAnswer.charAt(i)) {
+                result.setCharAt(i, '+');
+                usedInAnswer[i] = true;
             }
         }
+
+        // ^
+        for (int i = 0; i < 5; i++) {
+            if (result.charAt(i) == '+') continue;
+
+            for (int j = 0; j < 5; j++) {
+                if (!usedInAnswer[j] && answer.charAt(j) == realAnswer.charAt(j)) {
+                    result.setCharAt(i, '^');
+                    usedInAnswer[i] = true;
+                    break;
+                }
+            }
+        }
+
         return result.toString();
+
+//        for (int i = 0; i < correctAnswer.length(); i++) {
+//            char a = answer.charAt(i);
+//            char c = correctAnswer.charAt(i);
+//
+//            if (a == c) {
+//                result.append("+");
+//            } else if (correctAnswer.contains(String.valueOf(a))) {
+//                result.append("^");
+//            } else {
+//                result.append("-");
+//            }
+//        }
+//        return result.toString();
     }
 
     private void updateHintKnowledge(String answer, String hint) {
@@ -122,7 +149,9 @@ public class WordleGame {
                 }
                 incorrectPositions.get(i).add(a);
             } else if (h == '-') {
-                mustNotHave.add(a);
+                if (!mustNotHave.contains(a)) {
+                    mustNotHave.add(a);
+                }
             }
         }
     }
