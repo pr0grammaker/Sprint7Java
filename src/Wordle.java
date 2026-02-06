@@ -19,14 +19,10 @@ public class Wordle {
 
             String correctWord = dictionary.getRandomWord();
 
-            System.out.println(dictionary.getWords());//
-            System.out.println("Количество слов в словаре: " + dictionary.getWords().size());//
-
             WordleGame wordleGame = new WordleGame(dictionary, correctWord, printWriter);
             System.out.println("Добро пожаловать в игру WordleGame!");
 
             while (!wordleGame.isGameOver()) {
-                System.out.println(correctWord);//
                 System.out.println("Введите слово которое мы загадали (5 букв):");
                 String word = sc.nextLine().trim().toLowerCase().replace('ё', 'е');
 

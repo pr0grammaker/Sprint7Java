@@ -118,20 +118,6 @@ public class WordleGame {
         }
 
         return result.toString();
-
-//        for (int i = 0; i < correctAnswer.length(); i++) {
-//            char a = answer.charAt(i);
-//            char c = correctAnswer.charAt(i);
-//
-//            if (a == c) {
-//                result.append("+");
-//            } else if (correctAnswer.contains(String.valueOf(a))) {
-//                result.append("^");
-//            } else {
-//                result.append("-");
-//            }
-//        }
-//        return result.toString();
     }
 
     private void updateHintKnowledge(String answer, String hint) {
