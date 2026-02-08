@@ -94,13 +94,14 @@ public class WordleGame {
 
         String realAnswer = correctAnswer;
 
-        boolean[] usedInAnswer = new boolean[5];
+        Map<Character, Integer> remaining = new HashMap<>();
 
         // +
         for (int i = 0; i < 5; i++) {
             if (answer.charAt(i) == realAnswer.charAt(i)) {
                 result.setCharAt(i, '+');
-                usedInAnswer[i] = true;
+            } else {
+                remaining.put(realAnswer.charAt(i), remaining.getOrDefault(realAnswer.charAt(i), 0) + 1);
             }
         }
 
@@ -108,17 +109,16 @@ public class WordleGame {
         for (int i = 0; i < 5; i++) {
             if (result.charAt(i) == '+') continue;
 
-            for (int j = 0; j < 5; j++) {
-                if (!usedInAnswer[j] && answer.charAt(j) == realAnswer.charAt(j)) {
-                    result.setCharAt(i, '^');
-                    usedInAnswer[i] = true;
-                    break;
-                }
+            if (remaining.containsKey(answer.charAt(i)) && remaining.get(answer.charAt(i)) > 0) {
+                result.setCharAt(i, '^');
+                remaining.put(answer.charAt(i), remaining.get(answer.charAt(i)) - 1);
             }
+
         }
 
         return result.toString();
     }
+
 
     private void updateHintKnowledge(String answer, String hint) {
         for (int i = 0; i < hint.length(); i++) {
